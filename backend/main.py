@@ -587,6 +587,9 @@ async def weekly_report(user_id: str):
         ]
     }
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 @app.get("/health")
 async def health():
     statuses = provider_status()
@@ -597,6 +600,28 @@ async def health():
     
     return {"status": "online", "providers": statuses, "data_mode": "SQLite Real Engine"}
 
+# --- HOST COMPILED REACT FRONTEND ---
+frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend', 'dist'))
+
+if os.path.isdir(frontend_path):
+    # Mount specific asset directories so they don't get caught by the SPA catch-all
+    if os.path.isdir(os.path.join(frontend_path, "assets")):
+        app.mount("/assets", StaticFiles(directory=os.path.join(frontend_path, "assets")), name="assets")
+
+    # Catch-all route to serve the SPA index.html for all non-API paths
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        # Prevent catching API endpoints if they exist below here
+        if full_path.startswith("api/") or full_path == "health":
+            raise HTTPException(status_code=404, detail="Not Found")
+            
+        file_path = os.path.join(frontend_path, full_path)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(frontend_path, "index.html"))
+else:
+    logger.warning("Frontend dist directory not found. Please run 'npm run build' in the frontend folder.")
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=int(os.environ.get("PORT", 8000)), reload=False)

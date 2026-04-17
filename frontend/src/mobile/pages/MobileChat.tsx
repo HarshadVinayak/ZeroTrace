@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Sparkles, Zap } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
-const API_BASE = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE || 'http://127.0.0.1:8000';
+const API_BASE = "";
 
 type Msg = { role: 'user' | 'ai'; text: string };
 

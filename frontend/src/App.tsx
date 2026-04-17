@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import Login from './pages/Login';
 
-const API_BASE = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
+const API_BASE = "";
 
 const STAGGER_CHILDREN = {
   animate: { transition: { staggerChildren: 0.1 } }

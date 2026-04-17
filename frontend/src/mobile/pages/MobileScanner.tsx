@@ -3,7 +3,7 @@ import { Camera, X, ScanLine, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 
-const API_BASE = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
+const API_BASE = "";
 
 export default function MobileScanner() {
   const navigate = useNavigate();
